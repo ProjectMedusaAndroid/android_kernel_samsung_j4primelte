@@ -172,5 +172,5 @@ union tcp_cc_info {
 	struct tcpvegas_info	vegas;
 	struct tcp_dctcp_info	dctcp;
 	struct tcp_bbr_info		bbr;
-}
+};
 #endif /* _UAPI_INET_DIAG_H_ */
