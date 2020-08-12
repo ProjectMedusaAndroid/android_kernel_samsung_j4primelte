@@ -16,7 +16,7 @@ export SUBARCH=arm
 
 # Set kernel name and defconfig
 export VERSION=MedusaKernel-v1.7-NeMutluTürkümDiyene
-export DEFCONFIG=sec8917_defconfig
+export DEFCONFIG=j4primelte_kali_defconfig
 
 # Keep it as is
 export LOCALVERSION=-$VERSION
