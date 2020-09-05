@@ -15,7 +15,7 @@ export ARCH=arm
 export SUBARCH=arm
 
 # Set kernel name and defconfig
-export VERSION=MedusaKernel-v1.7-NeMutluTürkümDiyene
+export VERSION=MedusaKernel-v1.7.2-OneUI
 export DEFCONFIG=j4primelte_kali_defconfig
 
 # Keep it as is
@@ -23,7 +23,7 @@ export LOCALVERSION=-$VERSION
 
 # Export Username and machine name
 export KBUILD_BUILD_USER=Batuu
-export KBUILD_BUILD_HOST=Manjaro
+export KBUILD_BUILD_HOST=GoogleCloudServer
 
 # Color definition
 red=`tput setaf 1`
