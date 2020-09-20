@@ -238,13 +238,6 @@ static void fw_update(void *dev_data)
             sec->cmd_state = CMD_STATE_FAIL;
         break;
     case UMS:
-#ifdef CONFIG_SAMSUNG_PRODUCT_SHIP
-	sec->cmd_state = CMD_STATE_OK;
-	snprintf(buf, sizeof(buf), "%s", "OK");
-	set_cmd_result(sec, buf, strnlen(buf, sizeof(buf)));
-	return;
-#endif
-
         sec->cmd_state = CMD_STATE_OK;
         old_fs = get_fs();
         set_fs(get_ds());
@@ -3135,9 +3128,9 @@ bool ist30xx_tclm_check_condition_valid(struct ist30xx_data *data){
 		if ((data->root_of_calibration == CALPOSITION_TUNEUP) \
 			|| (data->root_of_calibration == CALPOSITION_INITIAL)) {
 			return true;
-		} else if (!((data->cal_position == CALPOSITION_LCIA) \
-			|| (data->cal_position == CALPOSITION_SVCCENTER)) \
-			&& (data->root_of_calibration == CALPOSITION_TESTMODE)) {
+		} else if ((data->root_of_calibration == CALPOSITION_TESTMODE)
+			&& ((data->cal_position == CALPOSITION_TESTMODE)
+			|| (data->cal_position == CALPOSITION_TUNEUP))) {
 			return true;
 		}
 		break;
