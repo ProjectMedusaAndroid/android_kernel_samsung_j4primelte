@@ -223,6 +223,97 @@ static struct cpu_clk_8953 a53_perf_clk;
 static struct cpu_clk_8953 cci_clk;
 static void do_nothing(void *unused) { }
 
+/* SysFS Undervolts Control */
+extern int cpr_regulator_get_corner_voltage(struct regulator *regulator,
+		int corner);
+extern int cpr_regulator_set_corner_voltage(struct regulator *regulator,
+		int corner, int volt);
+
+ssize_t cpu_clock_get_vdd(char *buf)
+{
+	ssize_t count = 0;
+	int i, uv;
+
+	if (!buf)
+		return 0;
+
+	/* Big Cluster (0 - 3) */
+	for (i = 1; i < a53_bc_clk.c.num_fmax; i++) {
+		uv = cpr_regulator_get_corner_voltage(
+					a53_bc_clk.c.vdd_class->regulator[0],
+					a53_bc_clk.c.vdd_class->vdd_uv[i]);
+		if (uv < 0)
+			return 0;
+
+		count += sprintf(buf + count, "Big_%lumhz: %d mV\n",
+					a53_bc_clk.c.fmax[i] / 1000000,
+					uv / 1000);
+	}
+
+	/* Little Cluster (4 - 7) */
+	for (i = 1; i < a53_lc_clk.c.num_fmax; i++) {
+		uv = cpr_regulator_get_corner_voltage(
+					a53_lc_clk.c.vdd_class->regulator[0],
+					a53_lc_clk.c.vdd_class->vdd_uv[i]);
+		if (uv < 0)
+			return 0;
+
+		count += sprintf(buf + count, "Little_%lumhz: %d mV\n",
+					a53_lc_clk.c.fmax[i] / 1000000,
+					uv / 1000);
+	}
+
+	return count;
+}
+
+ssize_t cpu_clock_set_vdd(const char *buf, size_t count)
+{
+	int i, mv, ret;
+	char line[32];
+
+	if (!buf)
+		return -EINVAL;
+
+	/* Big Cluster (0 - 3) */
+	for (i = 1; i < a53_bc_clk.c.num_fmax; i++) {
+		ret = sscanf(buf, "%d", &mv);
+		if (ret != 1)
+			return -EINVAL;
+
+		ret = cpr_regulator_set_corner_voltage(
+					a53_bc_clk.c.vdd_class->regulator[0],
+					a53_bc_clk.c.vdd_class->vdd_uv[i],
+					mv * 1000);
+		if (ret < 0)
+			return ret;
+
+		ret = sscanf(buf, "%s", line);
+
+		buf += strlen(line) + 1;
+	}
+
+	/* Little Cluster (4 - 7) */
+	for (i = 1; i < a53_lc_clk.c.num_fmax; i++) {
+		ret = sscanf(buf, "%d", &mv);
+		if (ret != 1)
+			return -EINVAL;
+
+		ret = cpr_regulator_set_corner_voltage(
+					a53_lc_clk.c.vdd_class->regulator[0],
+					a53_lc_clk.c.vdd_class->vdd_uv[i],
+					mv * 1000);
+		if (ret < 0)
+			return ret;
+
+		ret = sscanf(buf, "%s", line);
+
+		buf += strlen(line) + 1;
+	}
+
+	return count;
+}
+/* SysFS Undervolts Control */
+
 static inline struct cpu_clk_8953 *to_cpu_clk_8953(struct clk *c)
 {
 	return container_of(c, struct cpu_clk_8953, c);
