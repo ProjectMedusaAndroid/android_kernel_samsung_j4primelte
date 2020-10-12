@@ -16,7 +16,7 @@ export SUBARCH=arm
 
 # Set kernel name and defconfig
 export VERSION=MedusaKernel-v1.8.1-OneUI-Perf
-export DEFCONFIG=j4primelte_kali_defconfig
+export DEFCONFIG=j4primelte_medusa_defconfig
 
 # Keep it as is
 export LOCALVERSION=-$VERSION
