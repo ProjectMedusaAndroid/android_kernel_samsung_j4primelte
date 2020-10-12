@@ -23,7 +23,7 @@ export LOCALVERSION=-$VERSION
 
 # Export Username and machine name
 export KBUILD_BUILD_USER=Batu33-TR
-export KBUILD_BUILD_HOST=GoogleCloudServer
+export KBUILD_BUILD_HOST=AmazonWebServices
 
 # Color definition
 red=`tput setaf 1`
